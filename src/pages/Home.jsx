@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Alert, Spinner} from 'react-bootstrap';
-import Header from './Header';
-import CardPizza from './CardPizza';
+import Header from '../components/Header.jsx';
+import CardPizza from '../components/CardPizza.jsx';
 // import { pizzas } from './pizzas'; //
-import './Home.css';
+import '../Home.css';
 
 const Home = () => {
     const [pizzas, setPizzas] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Badge } from 'react-bootstrap';
-import './Pizza.css';
+import "../Pizza.css";
 
 const API_URL = 'http://localhost:5000/api/pizzas/p001';
 

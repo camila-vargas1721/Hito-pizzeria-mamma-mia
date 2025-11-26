@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Button, Image, Card } from 'react-bootstrap';
-import { pizzaCart } from './pizzas.js'; 
-import './Cart.css';
+import { pizzaCart } from "../pizzas.js"; 
+import '../Cart.css';
 
 const formatPrice = (price) => price.toLocaleString('es-CL');
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Button, Badge } from "react-bootstrap";
-import './CardPizza.css';
+import '../CardPizza.css';
 
 const CardPizza = ({ id, img, name, price, ingredients }) => {
 const priceFormateado = price ? price.toLocaleString('es-CL') : 'N/A';

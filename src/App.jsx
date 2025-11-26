@@ -1,31 +1,37 @@
 import React from 'react';
-import './app.css'
+import './app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CustomNavbar from './Navbar';
-import Home from './Home';
-import Footer from './Footer';
-{/*import Cart from './Cart';*/}
-import Pizza from './Pizza';
-{/*import Register from './Register';*/}
-{/*import Login from './Login';*/}
+import CustomNavbar from './components/CustomNavbar.jsx';
+import Footer from './components/Footer.jsx';
+import { Routes, Route } from 'react-router-dom';
+import Home from './Pages/Home.jsx';
+import Cart from './Pages/Cart.jsx';
+import Pizza from './Pages/Pizza.jsx';
+import Register from './Pages/Register.jsx';
+import Login from './Pages/Login.jsx';
+import Profile from './Pages/Profile.jsx';
+import NotFound from './Pages/NotFound.jsx';
+
 
 function App() {
   
    return (
     <>
       <CustomNavbar />
-      {/*Comentar <Home /> si desea ver <Pizza/>.*/}
-      <Home /> 
-      {/*Descomentar si es necesario */}
-      {/*<Cart /> */}  
-      {/*Para ver el Hito 4.2 (Detalle de Pizza), descomentar <Pizza />*/}
-      {/*<Pizza /> */}  
+
+      <Routes>
+      
+       <Route path="/" element={<Home />} />
+       <Route path="/register" element={<Register />} />
+       <Route path="/login" element={<Login />} />
+       <Route path="/cart" element={<Cart />} />
+       <Route path="/profile" element={<Profile />} />
+       <Route path="/pizza/:id" element={<Pizza />} />         
+       <Route path="*" element={<NotFound />} /> 
+
+      </Routes>
+
       <Footer />
-      {/*Para ver el componente RegisterPage, comentar la línea de <LoginPage /> y descomentar la línea de <Register/>.*/}
-      {/*<Register />*/}
-      {/*Para ver el componente Login, comentar la línea de <Register /> y descomentar la línea de <login />
-       */} 
-      {/*<Login />*/}
       
     </>
   );

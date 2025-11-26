@@ -5,5 +5,5 @@ const repoName = 'pizzeria-mamma-mia'
 
 export default defineConfig({
   plugins: [react()],
-  base: `/${repoName}/` 
+  base: '/' 
 })
