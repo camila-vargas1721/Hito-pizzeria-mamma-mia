@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Badge } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 import "../Pizza.css";
+import { ssrImportKey } from 'vite/module-runner';
 
-const API_URL = 'http://localhost:5000/api/pizzas/p001';
+const BASE_API_URL = 'http://localhost:5000/api/pizzas';
 
 const Pizza = () => {
+    const { id } = useParams();
+    const { addToCart } = useCart();
+
     const [pizza, setPizza] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const fetchPizza = async () => {
+
+        const API_URL = `${BASE_API_URL}/${id}`;
+
         try {
             const response = await fetch(API_URL);
             if (!response.ok) {
@@ -25,9 +34,17 @@ const Pizza = () => {
         }
     };
 
-    useEffect(() => {
-        fetchPizza();
-    }, []);
+useEffect(() => {
+        setLoading(true);
+        setError(null);
+
+        if (id) {
+            fetchPizza();
+        } else {
+            setError("No se proporcionó un ID de pizza en la URL.");
+            setLoading(false);
+        }
+    }, [id]);
 
     if (loading) return <Container className="my-5"><p>Cargando detalles de la pizza...</p></Container>;
     if (error) return <Container className="my-5"><p className="text-danger">{error}</p></Container>;
@@ -35,7 +52,11 @@ const Pizza = () => {
 
     const priceFormateado = pizza.price ? pizza.price.toLocaleString('es-CL') : 'N/A';
     const ingredientesJuntos = pizza.ingredients ? pizza.ingredients.join(', ') : 'Sin ingredientes';
-
+    const handleAddToCart = () => {
+        addToCart(pizza);
+        alert(`¡${pizza.name} añadida al carrito!`);
+    };
+    
     return (
         <Container className="my-5">
             <Row>

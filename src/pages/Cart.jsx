@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Button, Image, Card } from 'react-bootstrap';
-import { pizzaCart } from "../pizzas.js"; 
+import { useCart } from '../context/CartContext';
 import '../Cart.css';
 
 const formatPrice = (price) => price.toLocaleString('es-CL');
 
 const Cart = () => {
-  const [cart, setCart] = useState(pizzaCart);
+  const { cart, total, incrementItem, decrementItem } = useCart();
 
   const calculateTotal = () => {
     return cart.reduce((acc, item) => acc + (item.price * item.count), 0);
@@ -61,11 +61,11 @@ const Cart = () => {
                       <span className="text-muted small d-block">($ {formatPrice(item.price)} c/u)</span>
                     </Col>
                     <Col xs={6} className="d-flex align-items-center justify-content-end">
-                      <Button variant="dark" size="sm" onClick={() => handleDecrement(item.id)} className="me-2">
+                      <Button variant="dark" size="sm" onClick={() => decrementItem(item.id)} className="me-2">
                         -
                       </Button>
                       <span className="fw-bold">{item.count}</span>
-                      <Button variant="dark" size="sm" onClick={() => handleIncrement(item.id)} className="ms-2">
+                      <Button variant="dark" size="sm" onClick={() => incrementItem(item.id)} className="ms-2">
                         +
                       </Button>
                     </Col>

@@ -1,9 +1,19 @@
 import React from "react";
 import { Card, Button, Badge } from "react-bootstrap";
+import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 import '../CardPizza.css';
 
-const CardPizza = ({ id, img, name, price, ingredients }) => {
-const priceFormateado = price ? price.toLocaleString('es-CL') : 'N/A';
+const CardPizza = ({ pizza}) => {
+ const { id, img, name, price, ingredients } = pizza;
+ const { addToCart } = useCart();
+ const navigate = useNavigate();
+ const priceFormateado = price ? price.toLocaleString('es-CL') : 'N/A';
+ const handleAddToCart = () => {
+    addToCart(pizza);
+    alert(`¡${name} se ha agregado al carrito!`);
+
+};
 
 return (
         <Card className="card-pizza shadow-sm">
@@ -27,8 +37,8 @@ return (
                 <h4 className="mt-3 text-dark border-top pt-3">Precio: ${priceFormateado}</h4>
 
                 <div className="d-flex justify-content-between mt-3">
-                    <Button variant="outline-dark" size="sm">Ver más 👀</Button>
-                    <Button variant="dark" size="sm">Añadir 🛒</Button>
+                    <Button variant="outline-dark" size="sm" onClick={() => navigate(`/pizza/${id}`)} >Ver más 👀</Button>
+                    <Button variant="dark" size="sm" onClick={handleAddToCart} >Añadir 🛒</Button>
                 </div>
             </Card.Body>
         </Card>

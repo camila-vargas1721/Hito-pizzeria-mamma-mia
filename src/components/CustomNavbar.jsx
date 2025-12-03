@@ -1,12 +1,13 @@
 import React from "react";
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useCart } from "../context/CartContext";
 
 const CustomNavbar = () => {
-const total = 25000;
-const token = false;
-
-const totalFormateado = total.toLocaleString('es-CL');
+ const { total } = useCart();
+ const token = false;
+ const totalFormateado = total.toLocaleString('es-CL');
+ 
     return (
         <Navbar bg="dark" variant="dark" expand="lg">
             <Container>

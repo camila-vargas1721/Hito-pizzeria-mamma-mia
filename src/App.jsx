@@ -11,12 +11,16 @@ import Register from './Pages/Register.jsx';
 import Login from './Pages/Login.jsx';
 import Profile from './Pages/Profile.jsx';
 import NotFound from './Pages/NotFound.jsx';
+import { CartProvider } from './context/CartContext.jsx';
+import { PizzaProvider } from './context/PizzaContext.jsx';
 
 
 function App() {
   
    return (
     <>
+    <CartProvider>
+      <PizzaProvider>
       <CustomNavbar />
 
       <Routes>
@@ -30,8 +34,10 @@ function App() {
        <Route path="*" element={<NotFound />} /> 
 
       </Routes>
-
+      
       <Footer />
+      </PizzaProvider>
+      </CartProvider>
       
     </>
   );
