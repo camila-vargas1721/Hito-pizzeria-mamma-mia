@@ -1,27 +1,34 @@
 import React from 'react';
 import { Container, Card, Button } from 'react-bootstrap';
+import { useAuth } from '../context/UserContext.jsx';
 
 const Profile = () => {
-    const userEmail = "usuario_estatico@pizzeria.com"; 
+  const { email, logout } = useAuth(); 
 
-    const handleLogout = () => {
-        alert('Función de cerrar sesión (Logout) ejecutada.');
-    };
+  return (
+    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+      <Card className="p-4 shadow-lg text-center" style={{ maxWidth: '400px', width: '100%' }}>
+        <Card.Body>
+          <div className="mb-4">
+            <span style={{ fontSize: '4rem' }}>👤</span>
+          </div>
+          <Card.Title as="h2" className="mb-3">Perfil de Usuario</Card.Title>
+          <Card.Text className="text-muted mb-4">
+            Email conectado: <br />
+            <strong className="text-dark">{email}</strong>
+          </Card.Text>
 
-    return (
-        <Container className="my-5" style={{ maxWidth: '400px' }}>
-            <Card className="p-4 shadow">
-                <h2 className="text-center mb-4">🔒 Mi Perfil</h2>
-                <p className="text-center mb-4">
-                    **Email del Usuario:** <br />
-                    <span className="fw-bold text-primary">{userEmail}</span>
-                </p>
-                <Button variant="danger" onClick={handleLogout} className="w-100">
-                    Cerrar Sesión
-                </Button>
-            </Card>
-        </Container>
-    );
+          <Button 
+            variant="danger" 
+            onClick={logout} 
+            className="w-100 fw-bold"
+          >
+            Cerrar Sesión
+          </Button>
+        </Card.Body>
+      </Card>
+    </Container>
+  );
 };
 
 export default Profile;

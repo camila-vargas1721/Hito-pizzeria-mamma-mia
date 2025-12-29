@@ -1,125 +1,75 @@
 import React, { useState } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
+import { useAuth } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
-const Register= () => {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        confirmPassword: '',
-    });
+const Register = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
-    const [errors, setErrors] = useState({});
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (password.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
-        setErrors(prevErrors => ({
-            ...prevErrors,
-            [name]: '',
-        }));
-    };
+    if (password !== confirmPassword) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
 
-    const validate = () => {
-        let formErrors = {};
-        let isValid = true;
+    try {
+      await register(email, password);
+      navigate("/");
+    } catch (error) {
+      alert("Error al registrar el usuario");
+    }
+  };
 
-        if (!formData.email.trim()) {
-            formErrors.email = 'El email es obligatorio.';
-            isValid = false;
-        }
-        if (!formData.password) {
-            formErrors.password = 'La contraseña es obligatoria.';
-            isValid = false;
-        }
-        if (!formData.confirmPassword) {
-            formErrors.confirmPassword = 'Debes confirmar la contraseña.';
-            isValid = false;
-        }
-
-        if (formData.password && formData.password.length < 6) {
-            formErrors.password = 'El password debe tener al menos 6 caracteres.';
-            isValid = false;
-        }
-
-        if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) {
-            formErrors.confirmPassword = 'El password y la confirmación deben ser iguales.';
-            isValid = false;
-        }
-
-        setErrors(formErrors);
-        return isValid;
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        if (validate()) {
-            alert('¡Registro exitoso! Authentication successful!');
-            console.log('Datos de registro:', formData);
-        } else {
-            alert('Error en el registro. Por favor, revisa los campos.');
-        }
-    };
-
-    return (
-        <Container className="my-5" style={{ maxWidth: '400px' }}>
-            <h2 className="text-center mb-4">Registro</h2>
-            <Form onSubmit={handleSubmit}>
-                
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Ingresa tu email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        isInvalid={!!errors.email}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.email}
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Contraseña</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Contraseña"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        isInvalid={!!errors.password}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.password}
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
-                    <Form.Label>Confirmar Contraseña</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Confirma tu contraseña"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        isInvalid={!!errors.confirmPassword}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.confirmPassword}
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <Button variant="primary" type="submit" className="w-100 mt-3">
-                    Registrar
-                </Button>
-            </Form>
-        </Container>
-    );
+  return (
+    <div className="container my-5" style={{ maxWidth: '400px' }}>
+      <form onSubmit={handleSubmit} className="p-4 border rounded shadow">
+        <h3 className="mb-3">Registro</h3>
+        <div className="mb-2">
+          <label className="form-label">Email</label>
+          <input 
+            type="email" 
+            className="form-control" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+          />
+        </div>
+        <div className="mb-2">
+          <label className="form-label">Contraseña</label>
+          <input 
+            type="password" 
+            className="form-control" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Confirmar Contraseña</label>
+          <input 
+            type="password" 
+            className="form-control" 
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)} 
+            required 
+          />
+        </div>
+        <button type="submit" className="btn btn-success w-100 fw-bold">
+          Crear Cuenta
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default Register;

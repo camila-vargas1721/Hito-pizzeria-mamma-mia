@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col, Button, Image, Card } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/UserContext.jsx';
@@ -8,11 +8,34 @@ const formatPrice = (price) => price.toLocaleString('es-CL');
 
 const Cart = () => {
   const { cart, incrementItem, decrementItem } = useCart();
-  
   const { token } = useAuth();
+  const [mensaje, setMensaje] = useState("");
 
   const calculateTotal = () => {
     return cart.reduce((acc, item) => acc + (item.price * item.count), 0);
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/checkouts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ cart }),
+      });
+
+      if (response.ok) {
+        setMensaje("✅ ¡Compra realizada con éxito!");
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || "Hubo un error en el pago");
+      }
+    } catch (error) {
+      console.error("Error al realizar el checkout:", error);
+      alert("No se pudo conectar con el servidor");
+    }
   };
 
   return (
@@ -37,16 +60,11 @@ const Cart = () => {
                   <Row className="align-items-center">
                     <Col xs={6} className="text-end">
                       <span className="fw-bold text-dark">${formatPrice(item.price * item.count)}</span>
-                      <span className="text-muted small d-block">($ {formatPrice(item.price)} c/u)</span>
                     </Col>
                     <Col xs={6} className="d-flex align-items-center justify-content-end">
-                      <Button variant="dark" size="sm" onClick={() => decrementItem(item.id)} className="me-2">
-                        -
-                      </Button>
+                      <Button variant="dark" size="sm" onClick={() => decrementItem(item.id)} className="me-2"> - </Button>
                       <span className="fw-bold">{item.count}</span>
-                      <Button variant="dark" size="sm" onClick={() => incrementItem(item.id)} className="ms-2">
-                        +
-                      </Button>
+                      <Button variant="dark" size="sm" onClick={() => incrementItem(item.id)} className="ms-2"> + </Button>
                     </Col>
                   </Row>
                 </Col>
@@ -62,13 +80,15 @@ const Cart = () => {
             <Row className="mt-4">
               <Col xs={12} className="text-end">
                 <Button 
-              variant={token ? "success" : "secondary"} 
-              size="lg" 
-              className="px-5"
-              disabled={!token}
-              onClick={() => alert("🛒 ¡Pedido recibido! Estamos preparando tu pizza.")} >
-            {token ? "Confirmar Pago" : "Inicia sesión para pagar"}
-             </Button>
+                  disabled={!token} 
+                  onClick={handleCheckout}
+                  variant={token ? "success" : "secondary"}
+                  size="lg"
+                  className="px-5"
+                >
+                  {token ? "Pagar" : "Inicia sesión para pagar"}
+                </Button>
+                {mensaje && <p className="text-success mt-3 fw-bold">{mensaje}</p>}
               </Col>
             </Row>
           </>
