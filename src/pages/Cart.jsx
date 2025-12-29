@@ -1,39 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Container, Row, Col, Button, Image, Card } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/UserContext.jsx';
 import '../Cart.css';
 
 const formatPrice = (price) => price.toLocaleString('es-CL');
 
 const Cart = () => {
-  const { cart, total, incrementItem, decrementItem } = useCart();
+  const { cart, incrementItem, decrementItem } = useCart();
+  
+  const { token } = useAuth();
 
   const calculateTotal = () => {
     return cart.reduce((acc, item) => acc + (item.price * item.count), 0);
-  };
-
-  const handleIncrement = (id) => {
-    setCart(prevCart => 
-      prevCart.map(item => 
-        item.id === id ? { ...item, count: item.count + 1 } : item
-      )
-    );
-  };
-
-  const handleDecrement = (id) => {
-    setCart(prevCart => 
-      prevCart.reduce((acc, item) => {
-        if (item.id === id) {
-          const newCount = item.count - 1;
-          if (newCount > 0) {
-            acc.push({ ...item, count: newCount });
-          }
-        } else {
-          acc.push(item);
-        }
-        return acc;
-      }, [])
-    );
   };
 
   return (
@@ -82,9 +61,14 @@ const Cart = () => {
 
             <Row className="mt-4">
               <Col xs={12} className="text-end">
-                <Button variant="warning" size="lg" className="px-5">
-                  Pagar
-                </Button>
+                <Button 
+              variant={token ? "success" : "secondary"} 
+              size="lg" 
+              className="px-5"
+              disabled={!token}
+              onClick={() => alert("🛒 ¡Pedido recibido! Estamos preparando tu pizza.")} >
+            {token ? "Confirmar Pago" : "Inicia sesión para pagar"}
+             </Button>
               </Col>
             </Row>
           </>
